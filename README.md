@@ -1,4 +1,4 @@
-\# ISA 401: Business Intelligence \& Data Visualization
+# ISA 401: Business Intelligence \& Data Visualization
 
 
 
@@ -10,7 +10,7 @@ Semester: Fall 2026 repo for in class code
 
 
 
-\## Course Topics
+# Course Topics
 
 
 
