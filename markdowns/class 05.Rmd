@@ -1,0 +1,89 @@
+---
+title: "Class05"
+author: "Aashna Bhargava"
+date: "2026-09-09"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE #wanna have toc on the left side
+    number_sections: TRUE #gonna call them section 1 and 2
+    code_folding: show #shows or hides code
+    code_download: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Game 01: Find your seat
+
+```{r game 01}
+campus = jsonlite::fromJSON(
+  "https://isa401-find-your-seat.vercel.app/campus.json")
+```
+
+```{r}
+fsb = campus[['Farmer']]
+fsb$code
+
+names(campus)
+```
+```{r}
+fsb[['floors']]
+
+```
+```{r}
+sec_floor = fsb$floors[["2"]]
+sec_floor$sections
+sec_floor$rooms
+
+df = sec_floor$rooms
+df
+df[6,2]
+```
+
+##reading excel file
+
+```{r}
+occupation = readxl::read_excel(
+  path = "M:/business_intelligence/occupation.xlsx", sheet = "Table 1.4",skip = 1
+  )
+
+#optional: clean bottom 3 rows
+occupation = occupation [-c(32,33,34),]
+```
+##JSON Data
+
+```{r}
+json_url = paste0(
+  "https://data.cincinnati-oh.gov/resource/rvmt-pkmq.json?$limit=100")
+crashes_json = jsonlite::fromJSON(json_url)
+
+dplyr::glimpse(
+  crashes_json[, c("crashdate", "dayofweek",
+                   "crashseverity", "age")])
+
+dplyr::glimpse(crashes_json)
+```
+
+```{r}
+stage1 = readr::read_csv("M:/business_intelligence/stage1.csv")
+```
+```{r}
+logins = readr::read_csv("https://isa401-import-heist.vercel.app/api/stage1")
+```
+
+```{r}
+log = jsonlite::fromJSON("https://isa401-import-heist.vercel.app/api/stage2?key=smithj31")
+
+```
+
+```{r}
+stage2 = log$events
+
+```
+
+```{r}
+jsonlite::fromJSON("https://isa401-import-heist.vercel.app/api/finish?code=6")
+```
+
