@@ -1,0 +1,57 @@
+---
+title: "Class06"
+author: "Aashna Bhargava"
+date: "2026-09-14"
+output:
+  html_document:
+    toc: TRUE
+    toc_float: TRUE #wanna have toc on the left side
+    number_sections: TRUE #gonna call them section 1 and 2
+    code_folding: show #shows or hides code
+    code_download: TRUE # allows you to download the document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("RSQLite")
+
+```
+
+##Quick loading of data from assignment 4
+```{r}
+con = DBI::dbConnect(RSQLite::SQLite(), "../markdowns/midwest_airbnb.db")
+listings = DBI::dbReadTable(con, "listings")
+
+```
+
+##Kahoot 2
+```{r}
+run = readr::read_csv(
+  "https://isa401-find-your-seat.vercel.app/api/export?section=A&run=13")
+dplyr::glimpse(run)
+```
+```{r}
+# apps/job_scout_chat/app.R
+library(querychat)
+
+con = DBI::dbConnect(RSQLite::SQLite(), "data/scout.db")
+
+client = ellmer::chat_openai(
+  model  = "gpt-5.6-luna",
+  params = ellmer::params(reasoning_effort = "none")
+)
+
+qc = querychat(
+  con, "scout_postings",
+  client   = client,
+  tools    = c("filter", "query", "visualize"),
+  greeting = "Ask me about the 1,891 job postings
+              ChatISA Job Scout collected."
+)
+
+qc$app_obj()
+```
+
