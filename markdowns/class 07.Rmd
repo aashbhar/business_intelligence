@@ -55,6 +55,13 @@ jobs |>
 ```
 
 ```{r}
+##In class practice Qs
+
+con = DBI::dbConnect(RSQLite::SQLite(), "../data/midwest_airbnb.db")
+listings = DBI::dbReadTable(con, "listings") |>
+  tibble::as_tibble()
+DBI::dbDisconnect(con)
+dplyr::glimpse(listings)
 
 ```
 
