@@ -24,6 +24,7 @@ httr2::request("https://data.cincinnati-oh.gov/resource/rvmt-pkmq.json") |>
   jsonlite::fromJSON()
 
 ```
+
 ```{r}
 Sys.getenv("FRED_API_KEY")   # shows the key, so: Console only
 usethis::use_git_ignore(".Renviron")
@@ -31,6 +32,7 @@ usethis::use_git_ignore(".Renviron")
 ##FRED example
 
 ```{r}
+
 ohio_jobs= 
   httr2::request("https://api.stlouisfed.org/fred/series/observations") |>
   httr2::req_url_query(
@@ -46,5 +48,66 @@ ohio_jobs=
 dplyr::glimpse(ohio_jobs)
 
 ohio_df = ohio_jobs$observations # we saw that the data is in observations 
+
+dplyr::glimpse(ohio_df)
+
+#another approach to filter the dates would be:
+#ohio_df |> 
+  #dplyr::mutat(date = lubridate::ymd(date)) |> 
+  #dplyr::filter(date >= '2026-09-01') -> ohio_df_sept_2026
+
 ```
+```{r}
+
+Sys.getenv("USAJOBS_API_KEY")
+usethis::use_git_ignore(".Renviron")
+```
+
+```{r}
+httr2::request("https://data.usajobs.gov/api/search") |>
+  httr2::req_url_query(Keyword = "Data Analyst", ResultsPerPage = 500) |>
+  httr2::req_headers(
+    Host = "data.usajobs.gov",
+    "User-Agent" = "bhargaa2@miamioh.edu",
+    "Authorization-Key" = Sys.getenv("USAJOBS_API_KEY")
+  ) |>
+  httr2::req_perform() |>
+  httr2::resp_body_string() |>
+  jsonlite::fromJSON(flatten = T)-> usa_jobs_data
+
+usa_jobs_df = usa_jobs_data$SearchResult$SearchResultItems
+
+jobs_small = usa_jobs_df |> 
+  dplyr::select(
+    title = MatchedObjectDescriptor.PositionTitle,
+    department = MatchedObjectDescriptor.DepartmentName,
+    location = MatchedObjectDescriptor.PositionLocationDisplay,
+    closes = MatchedObjectDescriptor.ApplicationCloseDate
+  )
+
+##Easy way -- since we looked ofr data analyst as a key word
+nrow(jobs_small)
+
+##q2
+#table(jobs_small$department) |>  sort(decreasing = T) |> head(3)
+#jobs_small |> dplyr::count(department) |> 
+  #dplyr::arrange(dplyr::desc(n)) |> head=(3)
+
+
+##harder way (but literal)
+jobs_small |> dplyr::filter(title=='Data Analyst') -> count_literal
+
+
+##Harder way(w/o being literal)
+index_data_analyst = jobs_small$title |> 
+  stringr::str_detect("Data Anal*")
+
+#given that this is a true or false type result, true rows will be kept, nothing means keep all columns 
+count_jesse_standard = jobs_small[index_data_analyst, ]
+```
+
+```{r}
+Sys.getenv("USAJOBS_API_KEY")
+```
+
 
