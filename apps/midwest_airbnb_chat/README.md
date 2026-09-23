@@ -11,16 +11,28 @@ A twelve-line [querychat](https://github.com/posit-dev/querychat) app built in I
 **Question:** What are the 10 most expensive Airbnb listings in Chicago?
 <img width="562" height="670" alt="image" src="https://github.com/user-attachments/assets/f4cdca4e-1615-4fc3-937a-b50cd334232e" />
 
+<<<<<<< Updated upstream
+=======
+[ screenshot of answer here]
+>>>>>>> Stashed changes
 
 ### Example 2
 **Question:** Which city has the highest average nightly price?
 <img width="795" height="447" alt="image" src="https://github.com/user-attachments/assets/12ba7245-4d87-491c-b886-ded9dc5b37cc" />
 
+<<<<<<< Updated upstream
+=======
+[ screenshot of answer here]
+>>>>>>> Stashed changes
 
 ### Example 3
 **Question:** Show me highly rated listings hosted by Superhosts.
 <img width="577" height="752" alt="image" src="https://github.com/user-attachments/assets/6e660a73-3a1f-420c-a3c8-fa58a04d1fbc" />
 
+<<<<<<< Updated upstream
+=======
+[ screenshot of answer here]
+>>>>>>> Stashed changes
 
 ## What is this app?
 
