@@ -7,10 +7,27 @@ A twelve-line [querychat](https://github.com/posit-dev/querychat) app built in I
 **Live app:** ('https://midwest-airbnb-chat-i5uu.onrender.com')
 
 ---
+### Example 1
+**Question:** What are the 10 most expensive Airbnb listings in Chicago?
+
+[Add screenshot of answer here]
+
+### Example 2
+**Question:** Which city has the highest average nightly price?
+
+[Add screenshot of answer here]
+
+### Example 3
+**Question:** Show me highly rated listings hosted by Superhosts.
+
+[Add screenshot of answer here]
 
 ## What is this app?
 
 The app connects to a SQLite database (`data/scout.db`), hands the `scout_postings` table to querychat, and lets an LLM translate your question into SQL. Every answer shows the query it ran, so you can check the logic and reuse the SQL yourself.
+The app connects to the `listings` table in `data/midwest_airbnb.db` and uses querychat to translate questions about Airbnb listings into SQL. Users can explore listings through the chat and view the SQL used to generate each answer.
+The app includes a customized bslib theme, an About section, and a visible SQL panel so users can see how their questions are translated into SQL.
+
 
 **Example queries:**
 - "How many of the postings are remote?"

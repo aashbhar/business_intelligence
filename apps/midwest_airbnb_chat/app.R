@@ -1,5 +1,7 @@
 # ISA 401 Job Scout Chat: ask questions, get SQL, a table, or a chart back
 library(querychat)
+library(bslib)
+library(shiny)
 
 con = DBI::dbConnect(RSQLite::SQLite(), "data/midwest_airbnb.db")
 
@@ -21,4 +23,33 @@ qc = querychat::querychat(
   extra_instructions = "data/extra_instructions.md"
 )
 
-qc$app_obj()
+ui = page_sidebar(
+  title = "Midwest Airbnb Chat",
+  
+  theme = bs_theme(
+    primary = "#C3142D",
+    base_font = font_google("Lato")
+  ),
+  
+  sidebar = qc$sidebar(width = 350),
+  
+  card(
+    card_header(textOutput("title")),
+    DT::DTOutput("table")),
+  
+  accordion(open = FALSE,
+    accordion_panel("SQL",verbatimTextOutput("sql")),
+    accordion_panel("About","Midwest Airbnb listings for Chicago, Columbus, and the Twin Cities. Built by Aashna Bhargava."))
+)
+
+server = function(input, output, session) {
+  vals = qc$server()
+  output$title = renderText(vals$title() %||% "All Airbnb Listings")
+  output$table = DT::renderDT(vals$df(),
+                              options = list(pageLength = 10))
+  
+  output$sql = renderText(vals$sql() %||% 
+                            "SELECT * FROM listings")
+}
+
+shinyApp(ui, server)
