@@ -1,0 +1,105 @@
+---
+title: "Assignment 7"
+output: html_document
+date: "2026-10-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+departments = tibble::tibble(
+  department = c(
+    "Accountancy",
+    "Economics",
+    "Entrepreneurship",
+    "Finance",
+    "Information Systems & Analytics",
+    "Marketing",
+    "Management"
+  ),
+  url = c(
+    "https://miamioh.edu/fsb/directory/?up=/query/all/all/Accountancy/all",
+    "https://miamioh.edu/fsb/directory/?up=/query/all/all/Economics/all",
+    "https://miamioh.edu/fsb/directory/?up=/query/all/all/Entrepreneurship/all",
+    "https://miamioh.edu/fsb/directory/?up=/query/all/all/Finance/all",
+    "https://miamioh.edu/fsb/directory/?up=/query/all/all/Information%20Systems%20--%20Analytics/all",
+    "https://miamioh.edu/fsb/directory/?up=/query/all/all/Marketing/all",
+    "https://miamioh.edu/fsb/directory/?up=/query/all/all/Management/all"
+  )
+)
+
+scrape_dept_directory = function(dept_name, dept_url) {
+  
+  Sys.sleep(1)
+  
+  page_html = httr2::request(dept_url) |>
+    httr2::req_user_agent(
+      "ISA 401 class scraper (bhargaa2@miamioh.edu)"
+    ) |>
+    httr2::req_perform() |>
+    httr2::resp_body_html()
+  
+  rows = page_html |>
+    rvest::html_elements("table tr")
+  
+  dept_data = purrr::map_dfr(rows, function(row) {
+    
+    person_cell = row |>
+      rvest::html_element("td:nth-child(3)")
+    
+    name = person_cell |>
+      rvest::html_element("a") |>
+      rvest::html_text2()
+    
+    if (is.na(name) || name == "") {
+      return(NULL)
+    }
+    
+    website = person_cell |>
+      rvest::html_element("a") |>
+      rvest::html_attr("href")
+    
+    position = person_cell |>
+      rvest::html_text2() |>
+      stringr::str_remove(
+        stringr::fixed(name)
+      ) |>
+      stringr::str_squish()
+    
+    if (!is.na(website) &&
+        !stringr::str_starts(website, "http")) {
+      website = paste0("https://miamioh.edu", website)
+    }
+    
+    tibble::tibble(
+      department = dept_name,
+      name = name,
+      position = position,
+      website = website
+    )
+  })
+  
+  return(dept_data)
+}
+
+fsb_directory = purrr::map2_dfr(
+  departments$department,
+  departments$url,
+  scrape_dept_directory
+)
+
+head(fsb_directory)
+```
+
+```{r}
+nrow(fsb_directory)
+names(fsb_directory)
+```
+
+```{r}
+fsb_directory |>
+  dplyr::count(department)
+```
